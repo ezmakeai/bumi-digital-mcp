@@ -40,14 +40,29 @@ Generation endpoints may return `status: "completed"` immediately or `"processin
 
 ### Option A: stdio (local MCP client)
 
-Build from source:
+Install instantly via `npx` — no cloning or building required. Add to your MCP client config (Claude Desktop, Cursor, Trae, etc.):
+
+```json
+{
+  "mcpServers": {
+    "bumi-digital": {
+      "command": "npx",
+      "args": ["-y", "bumi-digital-mcp"],
+      "env": { "BUMI_API_KEY": "bd_xxx" }
+    }
+  }
+}
+```
+
+<details>
+<summary>Alternative: run from source</summary>
 
 ```bash
+git clone https://github.com/ezmakeai/bumi-digital-mcp.git
+cd bumi-digital-mcp
 npm install
 npm run build
 ```
-
-Add to your MCP client config (Claude Desktop, Cursor, Trae, etc.):
 
 ```json
 {
@@ -55,13 +70,13 @@ Add to your MCP client config (Claude Desktop, Cursor, Trae, etc.):
     "bumi-digital": {
       "command": "node",
       "args": ["/path/to/bumi-digital-mcp/dist/index.js"],
-      "env": {
-        "BUMI_API_KEY": "bd_your_api_key_here"
-      }
+      "env": { "BUMI_API_KEY": "bd_xxx" }
     }
   }
 }
 ```
+
+</details>
 
 ### Option B: Remote MCP (hosted via HTTP)
 
