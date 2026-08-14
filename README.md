@@ -100,20 +100,9 @@ Endpoints:
 | `PORT` | `3100` | HTTP listen port (HTTP mode only) |
 | `MCP_TRANSPORT` | — | Set to `http` to force HTTP mode without the `--http` flag |
 
-## Deployment (Coolify)
+## Self-Hosting (Optional)
 
-The included `Dockerfile` builds and runs the server in HTTP mode.
-
-1. **New Resource** → select this repository (`main` branch)
-2. **Build pack**: Dockerfile (auto-detected)
-3. **Port**: `3100`
-4. **Environment variables**: `BUMI_BASE_URL=https://bumi.digital`
-5. **Domain**: e.g. `mcp.bumi.digital` — Coolify handles TLS automatically
-6. Deploy, then verify:
-
-```bash
-curl https://mcp.bumi.digital/health
-```
+If you operate your own Bumi Digital instance, this server can be self-hosted in HTTP mode. A `Dockerfile` is included — it builds the project and serves `/mcp` on `PORT` (default `3100`). Point your MCP clients to `https://your-domain/mcp` with `Authorization: Bearer bd_...`.
 
 ## Development
 
