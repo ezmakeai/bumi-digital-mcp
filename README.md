@@ -1,6 +1,8 @@
 # Bumi Digital MCP Server
 
-Model Context Protocol (MCP) server for [Bumi Digital](https://bumi.digital) — generate AI images, videos, audio, and upscale media directly from MCP-compatible AI assistants (Claude Desktop, Cursor, Trae, and others).
+[![npm](https://img.shields.io/npm/v/bumi-digital-mcp)](https://www.npmjs.com/package/bumi-digital-mcp)
+
+Model Context Protocol (MCP) server for [Bumi Digital](https://bumi.digital) — generate AI images, videos, audio, and upscale media directly from MCP-compatible AI assistants (Claude Desktop, ChatGPT, Cursor, Trae, and others).
 
 This server is a thin wrapper over the Bumi Digital public REST API v1. All business logic (credits, refunds, storage, webhooks) is enforced by the API — nothing is duplicated here.
 
@@ -106,6 +108,11 @@ Endpoints:
 - `POST /mcp` — MCP protocol (Streamable HTTP)
 - `GET /health` — health check, returns `{ "ok": true }`
 
+In HTTP mode the API key is resolved per request, in this priority order:
+1. `?api_key=bd_...` query parameter (for clients without custom headers, e.g. ChatGPT)
+2. `Authorization: Bearer bd_...` header
+3. `BUMI_API_KEY` environment variable (fallback)
+
 ### Option C: ChatGPT connector (Developer Mode)
 
 ChatGPT connectors do not support custom headers — only OAuth or no authentication. Pass your API key as a query parameter instead:
@@ -121,7 +128,7 @@ The server reads `api_key` from the query string first, then falls back to the `
 
 | Environment Variable | Default | Description |
 |---|---|---|
-| `BUMI_API_KEY` | — | API key for stdio mode. In HTTP mode, keys come from each client's `Authorization` header (this acts as fallback) |
+| `BUMI_API_KEY` | — | API key for stdio mode. In HTTP mode this is only a fallback — clients normally pass their own key via header or `?api_key=` |
 | `BUMI_BASE_URL` | `https://bumi.digital` | Bumi Digital API base URL. Set to `http://localhost:3000` for local development |
 | `PORT` | `3100` | HTTP listen port (HTTP mode only) |
 | `MCP_TRANSPORT` | — | Set to `http` to force HTTP mode without the `--http` flag |
