@@ -124,8 +124,8 @@ If you operate your own Bumi Digital instance, this server can be self-hosted in
 ```bash
 npm install
 npm run build        # compile TypeScript
-npm run start        # stdio mode
-npm run start:http   # HTTP mode on PORT (default 3100)
+npm run start        # HTTP mode on PORT (default 3100)
+npm run start:stdio  # stdio mode (local MCP clients)
 ```
 
 Requires Node.js >= 18.
