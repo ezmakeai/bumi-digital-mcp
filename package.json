@@ -1,0 +1,26 @@
+{
+  "name": "bumi-digital-mcp",
+  "version": "1.0.0",
+  "description": "MCP server untuk Bumi Digital API (generate image/video/audio, upscale, credits, upload)",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "bumi-digital-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:http": "node dist/index.js --http",
+    "dev": "tsc && node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.50",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
