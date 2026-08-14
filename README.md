@@ -106,6 +106,17 @@ Endpoints:
 - `POST /mcp` — MCP protocol (Streamable HTTP)
 - `GET /health` — health check, returns `{ "ok": true }`
 
+### Option C: ChatGPT connector (Developer Mode)
+
+ChatGPT connectors do not support custom headers — only OAuth or no authentication. Pass your API key as a query parameter instead:
+
+- **Server URL**: `https://mcp.bumi.digital/mcp?api_key=bd_your_api_key_here`
+- **Authentication**: None (no OAuth)
+
+The server reads `api_key` from the query string first, then falls back to the `Authorization` header.
+
+> Note: keys in URLs may appear in server/proxy logs. Prefer the `Authorization` header (Option B) when your client supports it.
+
 ## Configuration
 
 | Environment Variable | Default | Description |

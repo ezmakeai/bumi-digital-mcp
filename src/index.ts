@@ -429,7 +429,10 @@ function createMcpServer(getApiKey: () => string): Server {
   return server;
 }
 
-function extractApiKey(req: http.IncomingMessage): string {
+function extractApiKey(req: http.IncomingMessage, url: URL): string {
+  // Prioritas: query param ?api_key= (untuk client tanpa custom header, mis. ChatGPT connector)
+  const fromQuery = url.searchParams.get('api_key')?.trim();
+  if (fromQuery) return fromQuery;
   const auth = req.headers.authorization || '';
   const token = auth.replace(/^Bearer\s+/i, '').trim();
   return token || ENV_API_KEY;
@@ -470,7 +473,7 @@ async function runHttp() {
 
     try {
       const body = req.method === 'POST' ? await readBody(req) : undefined;
-      const apiKey = extractApiKey(req);
+      const apiKey = extractApiKey(req, url);
 
       // Stateless: server + transport baru per request
       const transport = new StreamableHTTPServerTransport({
