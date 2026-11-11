@@ -13,7 +13,8 @@ const BASE_URL = (process.env.BUMI_BASE_URL || 'https://bumi.digital').replace(/
 const ENV_API_KEY = process.env.BUMI_API_KEY || '';
 const PORT = Number(process.env.PORT || 3100);
 
-const VALID_TYPES = ['image', 'video', 'audio', 'upscale-image', 'upscale-video'] as const;
+const VALID_TYPES = ['image', 'video', 'audio', 'upscale-image', 'upscale-video', '3d'] as const;
+const GENERATION_TYPES = ['image', 'video', 'audio', 'upscale-image', 'upscale-video', 'model3d'] as const;
 
 const MIME_BY_EXT: Record<string, string> = {
   '.jpg': 'image/jpeg',
@@ -151,6 +152,12 @@ const tools = [
     inputSchema: generateInputSchema,
   },
   {
+    name: 'generate_3d',
+    description:
+      'Generate atau transformasi model 3D dari teks, gambar, multi-view, atau mesh. Temukan model dan parameter melalui list_models / get_models_pricing dengan type "3d"; kirim hanya parameter yang dideklarasikan model (prompt wajib untuk text-to-3D). Response async "processing": simpan generation_id dan poll get_generation_status, atau gunakan webhook_url HTTP(S) publik. Bila submission "unknown", jangan kirim ulang secara otomatis; cek status dengan generation_id yang sama. Kredit dicadangkan saat pengajuan. Hasil dapat berisi beberapa aset tanpa jaminan format mesh. Riwayat menggunakan type "model3d".',
+    inputSchema: generateInputSchema,
+  },
+  {
     name: 'upscale_image',
     description: 'Upscale gambar ke resolusi lebih tinggi.',
     inputSchema: {
@@ -198,7 +205,7 @@ const tools = [
   {
     name: 'get_generation_status',
     description:
-      'Cek status & hasil sebuah generation (untuk polling hasil async). Status: processing | completed | failed. Hasil ada di field resultUrl.',
+      'Cek status & hasil sebuah generation (untuk polling hasil async). Status: processing | completed | failed. Hasil ada di field resultUrl (string atau array) dan resultUrls. Untuk aset 3D lokal /api/ai/model3d/file/..., unduh dengan API key yang sama; URL R2 bisa diakses langsung.',
     inputSchema: {
       type: 'object' as const,
       properties: {
@@ -215,7 +222,7 @@ const tools = [
       properties: {
         page: { type: 'integer', description: 'Halaman (default 1)', minimum: 1 },
         limit: { type: 'integer', description: 'Jumlah per halaman (default 20, maks 100)', minimum: 1, maximum: 100 },
-        type: { type: 'string', enum: VALID_TYPES, description: 'Filter tipe' },
+        type: { type: 'string', enum: GENERATION_TYPES, description: 'Filter tipe riwayat (gunakan model3d untuk 3D, bukan 3d)' },
         status: {
           type: 'string',
           enum: ['processing', 'completed', 'failed'],
@@ -304,6 +311,13 @@ async function handleCall(
 
     case 'generate_audio':
       return apiRequest(apiKey, 'POST', '/api/v1/audio/generate', {
+        body: generateBody(
+          args as { model_id: string; parameters?: Record<string, unknown>; webhook_url?: string },
+        ),
+      });
+
+    case 'generate_3d':
+      return apiRequest(apiKey, 'POST', '/api/v1/3d/generate', {
         body: generateBody(
           args as { model_id: string; parameters?: Record<string, unknown>; webhook_url?: string },
         ),
