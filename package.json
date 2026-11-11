@@ -1,6 +1,6 @@
 {
   "name": "bumi-digital-mcp",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "MCP server for Bumi Digital API — AI image, video, audio generation & upscaling for Claude, Cursor, and Trae",
   "type": "module",
   "main": "dist/index.js",
